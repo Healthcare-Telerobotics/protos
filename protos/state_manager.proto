@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package github.com.telerobotics.platform.protos;
+
+option go_package = "telerobotics";
+option csharp_namespace = "Telerobotics.Protos";
+
+import "common.proto";
+import "google/protobuf/timestamp.proto";
+
+/*
+    Manages the state of the procedure
+*/
+service StateManagerService {
+    // Records frames
+    rpc RecordFrames(stream RecordFramesRequest) returns (RecordFramesResponse);
+}
+
+message RecordFramesRequest {
+    Frame data = 1;
+    google.protobuf.Timestamp created = 2;
+}
+
+message RecordFramesResponse {}

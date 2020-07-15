@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package github.com.telerobotics.platform.protos;
+
+option go_package = "telerobotics";
+option csharp_namespace = "Telerobotics.Protos";
+
+import "google/protobuf/struct.proto";
+
+message Device {
+    uint64 id = 1;
+    DeviceInfo info = 2;
+}
+
+message DeviceInfo {
+    string name = 1;
+    DeviceType type = 2;
+    string ip = 3;
+    uint32 port = 4;
+    repeated DataType produces = 5;
+    repeated DataType consumes = 6;
+}
+
+enum DeviceType {
+    Robot = 0;
+    Controller = 1;
+    Catheter = 2;
+    Headset = 3;
+    ElectricalSignalGenerator = 4;
+}
+
+enum DataType {
+    RobotState = 0;
+    RobotControls = 1;
+    CatheterSensorCoordinates = 2;
+    ElectricalSignals = 3;
+}
+
+message Coordinates {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message Quaternion {
+    float w = 1;
+    float x = 2;
+    float y = 3;
+    float z = 4;
+}
+
+message CatheterCoordinates {
+    Coordinates position = 1;
+    Quaternion rotation = 2;
+}
+
+message CatheterData {
+    uint32 sensorId = 1;
+    CatheterCoordinates coordinates = 2;
+}
+
+message RobotControllerData {
+    float movementVelocity = 1;
+    float rotationVelocity = 2;
+    float deflectionVelocity = 3;
+}
+
+message NullableRobotControllerData {
+    oneof kind {
+        google.protobuf.NullValue null = 1;
+        RobotControllerData data = 2;
+    }
+}
+
+message Frame {
+    repeated CatheterData catheterData = 1;
+    NullableRobotControllerData nullableRobotControllerData = 2;
+}

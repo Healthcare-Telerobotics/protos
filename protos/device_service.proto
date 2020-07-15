@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package github.com.telerobotics.platform.protos;
+
+option go_package = "telerobotics";
+option csharp_namespace = "Telerobotics.Protos";
+
+import "common.proto";
+
+/*
+    The DeviceService manages devices. Once a device is created
+    it can be used in a telerobotic procedure.
+*/
+service DeviceService {
+    // Creates a new device
+    rpc Create(CreateDeviceRequest) returns (CreateDeviceResponse);
+
+    // Get information about a single device
+    rpc Get(GetDeviceRequest) returns (GetDeviceResponse);
+
+    // Update information about a single device
+    rpc Update(UpdateDeviceRequest) returns (UpdateDeviceResponse);
+
+    // Lists all devices
+    rpc List(ListDevicesRequest) returns (stream ListDevicesResponse);
+
+    // Deletes a device
+    rpc Delete(DeleteDeviceRequest) returns (DeleteDeviceResponse);
+}
+
+message CreateDeviceRequest {
+    DeviceInfo info = 1;
+}
+
+message CreateDeviceResponse {
+    Device device = 1;
+}
+
+message GetDeviceRequest {
+    uint64 deviceID = 1;
+}
+
+message GetDeviceResponse {
+    Device device = 1;
+}
+
+message UpdateDeviceRequest {
+    uint64 deviceID = 1;
+    DeviceInfo info = 2;
+}
+
+message UpdateDeviceResponse {
+    Device device = 1;
+}
+
+message ListDevicesRequest {
+}
+
+message ListDevicesResponse {
+    Device device = 1;
+}
+
+message DeleteDeviceRequest {
+    uint64 deviceID = 1;
+}
+
+message DeleteDeviceResponse {
+}

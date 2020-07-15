@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package github.com.telerobotics.platform.protos;
+
+option go_package = "telerobotics";
+option csharp_namespace = "Telerobotics.Protos";
+
+import "common.proto";
+import "google/protobuf/timestamp.proto";
+
+/*
+    Service for interacting with catheter paths
+*/
+service CatheterPathService {
+    // Create a catheter path
+    rpc Create(CreateCatheterPathRequest) returns (CreateCatheterPathResponse);
+
+    // Gets a catheter path
+    rpc Get(GetCatheterPathRequest) returns (GetCatheterPathResponse);
+
+    // Gets a catheter path coordinates
+    rpc GetCoordinates(GetCoordinatesCatheterPathRequest) returns (stream GetCoordinatesCatheterPathResponse);
+
+    // Lists catheter paths
+    rpc List(ListCatheterPathsRequest) returns (stream ListCatheterPathsResponse);
+}
+
+message CreateCatheterPathRequest {
+    CatheterPath path = 1;
+}
+
+message CreateCatheterPathResponse {
+    uint64 id = 1;
+}
+
+message GetCatheterPathRequest {
+    uint64 id = 1;
+}
+
+message GetCatheterPathResponse {
+    CatheterPath path = 1;
+}
+
+message GetCoordinatesCatheterPathRequest {
+    uint64 id = 1;
+}
+
+message GetCoordinatesCatheterPathResponse {
+    CatheterCoordinates coordinate = 1; 
+}
+
+message ListCatheterPathsRequest {}
+
+message ListCatheterPathsResponse {
+    CatheterPath path = 1;
+}
+
+message CatheterPath {
+    uint64 id = 1;
+    uint64 startCatheterDataID = 2;
+    uint64 endCatheterDataID = 3;
+    string name = 4;
+    google.protobuf.Timestamp created = 5;
+}

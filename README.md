@@ -1,2 +1,2 @@
-# protos
-Protobufs describing telerobotic data
+# APIs
+Protobufs describing Telerobotic APIs
