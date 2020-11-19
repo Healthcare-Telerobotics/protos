@@ -68,18 +68,18 @@ consumes = (DataType.ElectricalSignals)
 
 # Initialize the SDK
 sdk = Sdk(
-    on_session_joined=on_session_joined, # Called when a simulation/procedure begins
-    on_session_ended=on_session_ended, # Called when a simulation/procedure ends
-    get_frame_callback=get_frame_callback, # Called to get data every frame (see get_frame_freq below)
-    on_frame_callback=on_frame_callback, # Called when data is received
-    produces=produces, # Defines the types of data this program produces, if any
-    consumes=consumes, # Defines the types od data this program consumes, if any
-    device_service_address="https://apis.telerobotics.com/devices", # URL to the device service
-    session_service_address="https://apis.telerobotics.com/sessions",  # URL to the session service
-    state_manager_service_address="https://apis.telerobotics.com/states"  # URL to the state manager service
-    device_id=1, # The unique id of this device/program
-    device_port=3000, # The port this program will use to communicate with other devices
-    get_frame_freq=30, # The frequency in milliseconds data is retrieved from this device
+    on_session_joined=on_session_joined,                                    # Called when a simulation/procedure begins
+    on_session_ended=on_session_ended,                                      # Called when a simulation/procedure ends
+    get_frame_callback=get_frame_callback,                                  # Called to get data every frame (see get_frame_freq below)
+    on_frame_callback=on_frame_callback,                                    # Called when data is received
+    produces=produces,                                                      # Defines the types of data this program produces, if any
+    consumes=consumes,                                                      # Defines the types od data this program consumes, if any
+    device_service_address="https://apis.telerobotics.com/devices",         # URL to the device service
+    session_service_address="https://apis.telerobotics.com/sessions",       # URL to the session service
+    state_manager_service_address="https://apis.telerobotics.com/states",   # URL to the state manager service
+    device_id=1,                                                            # The unique id of this device/program
+    device_port=3000,                                                       # The port this program will use to communicate with other devices
+    get_frame_freq=30,                                                      # The frequency in milliseconds data is retrieved from this device
 )
 
 # Asynchronously connect to the telerobotic platform.
