@@ -1,18 +1,21 @@
 syntax = "proto3";
 
-package github.com.telerobotics.platform.protos;
+package github.com.pyrus.platform.protos;
 
-option go_package = "telerobotics";
-option csharp_namespace = "Telerobotics.Protos";
+option go_package = "platform";
+option csharp_namespace = "Pyrus.Platform.Protos";
 
 import "common.proto";
 import "google/protobuf/timestamp.proto";
 
 /*
-    The SessionService manages a telerobotic session.
+    The SessionService manages a telerobotic session. In its current implementation
+    it manages a single controller connecting to a single robot. In the future, a
+    session may additionally include medical devices, user interfaces, and other
+    items neccessary to achieve telerobotics. 
 */
 service SessionService {
-    // Creates a session, causing each device to recieve the other
+    // Creates a session, causing each Statusing device to recieve the other
     // device's address
     rpc Create(CreateSessionRequest) returns (CreateSessionResponse);
 
@@ -29,6 +32,7 @@ service SessionService {
     rpc WaitFor(WaitForSessionRequest) returns (stream WaitForSessionResponse);
 
     // ListWaiting lists waiting clients
+    // TODO: Rethink design. This seems odd
     rpc ListWaiting(ListWaitingSessionRequest) returns (stream ListWaitingSessionResponse);
 
     // Streams messages between the client and server indicating the session's status

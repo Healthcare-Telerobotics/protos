@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-package github.com.telerobotics.platform.protos;
+package github.com.pyrus.platform.protos;
 
-option go_package = "telerobotics";
-option csharp_namespace = "Telerobotics.Protos";
+option go_package = "platform";
+option csharp_namespace = "Pyrus.Platform.Protos";
 
 import "common.proto";
 import "google/protobuf/timestamp.proto";

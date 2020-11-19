@@ -1,11 +1,12 @@
 syntax = "proto3";
 
-package github.com.telerobotics.platform.protos;
+package github.com.pyrus.platform.protos;
 
-option go_package = "telerobotics";
-option csharp_namespace = "Telerobotics.Protos";
+option go_package = "platform";
+option csharp_namespace = "Pyrus.Platform.Protos";
 
 import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
 
 message Device {
     uint64 id = 1;
@@ -72,7 +73,15 @@ message NullableRobotControllerData {
     }
 }
 
+message ElectricalSignalData {
+    uint32 signalId = 1;
+    float value = 2;
+    google.protobuf.Timestamp created = 4;
+}
+
 message Frame {
     repeated CatheterData catheterData = 1;
     NullableRobotControllerData nullableRobotControllerData = 2;
+    repeated ElectricalSignalData electricalSignals = 3;
+    google.protobuf.Timestamp created = 4;
 }
