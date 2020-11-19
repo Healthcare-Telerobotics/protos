@@ -88,4 +88,4 @@ sdk.connect_async()
 ```
 
 ## Installation
-The Telerobotics SDK is in alpha. For access to the SDK, services and other resources, please contact Ryan James.
+The Telerobotics SDK is in alpha. I plan to have all resources openly available soon. In the meantime, for access to the SDK, services and other resources, please contact Ryan James.
