@@ -1,0 +1,10 @@
+INCLUDE(FindProtobuf)
+FIND_PACKAGE(Protobuf REQUIRED)
+INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
+
+FILE(GLOB proto_files "${CMAKE_CURRENT_LIST_DIR}/../../protos/*.proto")
+PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER ${proto_files})
+
+ADD_LIBRARY(proto ${PROTO_HEADER} ${PROTO_SRC})
+
+target_link_libraries(proto INTERFACE ${Protobuf_LIBRARIES})

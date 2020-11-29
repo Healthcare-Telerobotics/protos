@@ -2,29 +2,30 @@
 #include "sdk.h"
 #include "libsdk.h"
 
+using namespace std;
 using namespace github::com::pyrus::platform::protos;
 
-GoString createGoString(std::string str);
+GoString createGoString(string str);
 
-GoSlice createGoSlice(std::vector<int64_t> array);
+GoSlice createGoSlice(vector<int64_t> array);
 
 // TODO: Get the callbacks working without a global instance
 Sdk* instance;
 
-Sdk::Sdk(std::string deviceServiceAddress,
-	std::string sessionServiceAddress,
-	std::string stateManagerServiceAddress,
+Sdk::Sdk(string deviceServiceAddress,
+	string sessionServiceAddress,
+	string stateManagerServiceAddress,
 	uint64_t deviceID,
 	uint32_t devicePort,
-	std::string deviceIP,
-	std::vector<int64_t> produces,
-	std::vector<int64_t> consumes,
+	vector<int64_t> produces,
+	vector<int64_t> consumes,
 	OnSession onSessionJoined,
 	OnSession onSessionEnded,
 	GetFrameCallback getFrameCallback,
 	OnFrameCallback onFrameCallback,
 	uint64_t sessionID,
-	int getFrameIntervalMS
+	int getFrameIntervalMS,
+    string deviceIP
 ) :
     _deviceServiceAddress(deviceServiceAddress),
     _sessionServiceAddress(sessionServiceAddress),
@@ -66,7 +67,7 @@ void Sdk::connect() {
 }
 
 bool Sdk::handleGetFrame(unsigned char* bufferPtr, int* sizePtr) {
-    Frame* framePtr = instance->_getFrameCallback();
+    unique_ptr<Frame> framePtr = instance->_getFrameCallback();
     if (framePtr == nullptr)
         return false;
 
@@ -77,17 +78,17 @@ bool Sdk::handleGetFrame(unsigned char* bufferPtr, int* sizePtr) {
 bool Sdk::handleOnFrame(unsigned char* bufferPtr, int size) {
     Frame frame;
     frame.ParseFromArray(bufferPtr, size);
-    return instance->_onFrameCallback(&frame);
+    return instance->_onFrameCallback(frame);
 }
 
-GoString createGoString(std::string str) {
+GoString createGoString(string str) {
     GoString goString;
     goString.p = str.c_str();
     goString.n = str.length();
     return goString;
 }
 
-GoSlice createGoSlice(std::vector<int64_t> array) {
+GoSlice createGoSlice(vector<int64_t> array) {
     GoSlice goSlice;
     goSlice.data = array.data();
     goSlice.len = goSlice.cap = array.size();

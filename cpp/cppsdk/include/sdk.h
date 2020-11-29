@@ -1,11 +1,12 @@
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "callbacks.h"
-#include "protos/common.pb.h"
+#include "common.pb.h"
 
-typedef github::com::pyrus::platform::protos::Frame* (*GetFrameCallback) ();
-typedef bool (*OnFrameCallback) (github::com::pyrus::platform::protos::Frame*);
+typedef std::unique_ptr<github::com::pyrus::platform::protos::Frame> (*GetFrameCallback) ();
+typedef bool (*OnFrameCallback) (github::com::pyrus::platform::protos::Frame&);
 
 class Sdk {
 public:
@@ -14,15 +15,15 @@ public:
 		std::string stateManagerServiceAddress,
 		uint64_t deviceID,
 		uint32_t devicePort,
-		std::string deviceIP,
 		std::vector<int64_t> produces,
 		std::vector<int64_t> consumes,
 		OnSession onSessionJoined,
 		OnSession onSessionEnded,
 		GetFrameCallback getFrameCallback,
 		OnFrameCallback onFrameCallback,
-		uint64_t sessionID,
-		int getFrameIntervalMS);
+		uint64_t sessionID = 0,
+		int getFrameIntervalMS = 10,
+		std::string deviceIP = "");
 
     void connect();
 
