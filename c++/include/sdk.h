@@ -3,41 +3,29 @@
 
 #include "callbacks.h"
 
-class SDK {
+class Sdk {
 public:
-    SDK(std::string deviceServiceAddress,
-	std::string sessionServiceAddress,
-	std::string stateManagerServiceAddress,
-	uint64_t deviceID,
-	uint32_t devicePort,
-	std::string deviceIP,
-	std::vector<int64_t> produces,
-	std::vector<int64_t> consumes,
-	OnSession onSessionJoined,
-	OnSession onSessionEnded,
-	GetFrame getFrameCallback,
-	OnFrame onFrameCallback,
-	uint64_t sessionID,
-	int getFrameIntervalMS) :
-        _deviceServiceAddress(deviceServiceAddress),
-        _sessionServiceAddress(sessionServiceAddress),
-        _stateManagerServiceAddress(stateManagerServiceAddress),
-        _deviceID(deviceID),
-        _devicePort(devicePort),
-        _deviceIP(deviceIP),
-        _produces(produces),
-        _consumes(consumes),
-        _onSessionJoined(onSessionJoined),
-        _onSessionEnded(onSessionEnded),
-        _getFrameCallback(getFrameCallback),
-        _onFrameCallback(onFrameCallback),
-        _sessionID(sessionID),
-        _getFrameIntervalMS(getFrameIntervalMS)
-    {}
+	Sdk(std::string deviceServiceAddress,
+		std::string sessionServiceAddress,
+		std::string stateManagerServiceAddress,
+		uint64_t deviceID,
+		uint32_t devicePort,
+		std::string deviceIP,
+		std::vector<int64_t> produces,
+		std::vector<int64_t> consumes,
+		OnSession onSessionJoined,
+		OnSession onSessionEnded,
+		GetFrame getFrameCallback,
+		OnFrame onFrameCallback,
+		uint64_t sessionID,
+		int getFrameIntervalMS);
 
     void connect();
 
 private:
+	static bool handleGetFrame(unsigned char* bufferPtr, int* sizePtr);
+	static bool handleOnFrame(unsigned char* bufferPtr, int size);
+
     std::string _deviceServiceAddress;
 	std::string _sessionServiceAddress;
 	std::string _stateManagerServiceAddress;
