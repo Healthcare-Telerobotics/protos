@@ -8,7 +8,7 @@ using namespace github::com::pyrus::platform::protos;
 
 void onSessionJoined(uint64_t sessionId);
 void onSessionEnded(uint64_t sessionId);
-unique_ptr<Frame> getFrame();
+bool getFrame(Frame& frame);
 bool onFrame(Frame&);
 
 int main() {
@@ -29,17 +29,33 @@ int main() {
 }
 
 void onSessionJoined(uint64_t sessionId) {
-    cout << "Joined session" << sessionId << endl;
+    cout << "Joined session " << sessionId << endl;
 }
 
 void onSessionEnded(uint64_t sessionId) {
-    cout << "Session" << sessionId << "ended" << endl;
+    cout << "Session " << sessionId << " ended" << endl;
 }
 
-unique_ptr<Frame> getFrame() {
-    return nullptr;
+bool getFrame(Frame& frame) {
+    CatheterData* catheterData = frame.add_catheterdata();
+    catheterData->set_sensorid(0);
+    CatheterCoordinates coordinates = catheterData->coordinates();
+    
+    Coordinates position = coordinates.position();
+    position.set_x(1);
+    position.set_y(2);
+    position.set_z(3);
+
+    Quaternion rotation = coordinates.rotation();
+    rotation.set_x(1);
+    rotation.set_y(2);
+    rotation.set_z(3);
+    rotation.set_w(1);
+
+    return true;
 }
 
 bool onFrame(Frame& frame) {
-    return false;
+    cout << "Frame: " << frame.DebugString() << endl;
+    return true;
 }

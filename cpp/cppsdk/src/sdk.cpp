@@ -67,12 +67,12 @@ void Sdk::connect() {
 }
 
 bool Sdk::handleGetFrame(unsigned char* bufferPtr, int* sizePtr) {
-    unique_ptr<Frame> framePtr = instance->_getFrameCallback();
-    if (framePtr == nullptr)
+    Frame frame;
+    if (instance->_getFrameCallback(frame))
         return false;
 
-    *sizePtr = framePtr->ByteSizeLong();
-    return framePtr->SerializeToArray(bufferPtr, *sizePtr);
+    *sizePtr = frame.ByteSizeLong();
+    return frame.SerializeToArray(bufferPtr, *sizePtr);
 }
 
 bool Sdk::handleOnFrame(unsigned char* bufferPtr, int size) {

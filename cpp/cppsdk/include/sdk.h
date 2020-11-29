@@ -5,7 +5,7 @@
 #include "callbacks.h"
 #include "common.pb.h"
 
-typedef std::unique_ptr<github::com::pyrus::platform::protos::Frame> (*GetFrameCallback) ();
+typedef bool (*GetFrameCallback) (github::com::pyrus::platform::protos::Frame&);
 typedef bool (*OnFrameCallback) (github::com::pyrus::platform::protos::Frame&);
 
 class Sdk {
