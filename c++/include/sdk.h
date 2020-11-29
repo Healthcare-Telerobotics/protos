@@ -2,6 +2,10 @@
 #include <vector>
 
 #include "callbacks.h"
+#include "protos/common.pb.h"
+
+typedef github::com::pyrus::platform::protos::Frame* (*GetFrameCallback) ();
+typedef bool (*OnFrameCallback) (github::com::pyrus::platform::protos::Frame*);
 
 class Sdk {
 public:
@@ -15,8 +19,8 @@ public:
 		std::vector<int64_t> consumes,
 		OnSession onSessionJoined,
 		OnSession onSessionEnded,
-		GetFrame getFrameCallback,
-		OnFrame onFrameCallback,
+		GetFrameCallback getFrameCallback,
+		OnFrameCallback onFrameCallback,
 		uint64_t sessionID,
 		int getFrameIntervalMS);
 
@@ -36,8 +40,8 @@ private:
 	std::vector<int64_t> _consumes;
     OnSession _onSessionJoined;
 	OnSession _onSessionEnded;
-	GetFrame _getFrameCallback;
-	OnFrame _onFrameCallback;
+	GetFrameCallback _getFrameCallback;
+	OnFrameCallback _onFrameCallback;
 	uint64_t _sessionID;
 	int _getFrameIntervalMS;
 };

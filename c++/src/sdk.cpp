@@ -2,6 +2,8 @@
 #include "sdk.h"
 #include "libsdk.h"
 
+using namespace github::com::pyrus::platform::protos;
+
 GoString createGoString(std::string str);
 
 GoSlice createGoSlice(std::vector<int64_t> array);
@@ -19,8 +21,8 @@ Sdk::Sdk(std::string deviceServiceAddress,
 	std::vector<int64_t> consumes,
 	OnSession onSessionJoined,
 	OnSession onSessionEnded,
-	GetFrame getFrameCallback,
-	OnFrame onFrameCallback,
+	GetFrameCallback getFrameCallback,
+	OnFrameCallback onFrameCallback,
 	uint64_t sessionID,
 	int getFrameIntervalMS
 ) :
@@ -64,11 +66,18 @@ void Sdk::connect() {
 }
 
 bool Sdk::handleGetFrame(unsigned char* bufferPtr, int* sizePtr) {
-    return false;
+    Frame* framePtr = instance->_getFrameCallback();
+    if (framePtr == nullptr)
+        return false;
+
+    *sizePtr = framePtr->ByteSizeLong();
+    return framePtr->SerializeToArray(bufferPtr, *sizePtr);
 }
 
 bool Sdk::handleOnFrame(unsigned char* bufferPtr, int size) {
-    return false;
+    Frame frame;
+    frame.ParseFromArray(bufferPtr, size);
+    return instance->_onFrameCallback(&frame);
 }
 
 GoString createGoString(std::string str) {

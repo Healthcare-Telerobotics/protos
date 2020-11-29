@@ -1,4 +1,4 @@
-add_library(cppsdk SHARED sdk.cpp)
+add_library(cppsdk SHARED sdk.cpp protos)
 
 target_include_directories (cppsdk PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
