@@ -68,7 +68,7 @@ void Sdk::connect() {
 
 bool Sdk::handleGetFrame(unsigned char* bufferPtr, int* sizePtr) {
     Frame frame;
-    if (instance->_getFrameCallback(frame))
+    if (!instance->_getFrameCallback(frame))
         return false;
 
     *sizePtr = frame.ByteSizeLong();
@@ -76,6 +76,9 @@ bool Sdk::handleGetFrame(unsigned char* bufferPtr, int* sizePtr) {
 }
 
 bool Sdk::handleOnFrame(unsigned char* bufferPtr, int size) {
+    if (size <= 0)
+        return true;
+
     Frame frame;
     frame.ParseFromArray(bufferPtr, size);
     return instance->_onFrameCallback(frame);
