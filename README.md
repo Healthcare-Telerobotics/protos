@@ -5,86 +5,82 @@ Telerobotics SDK is a C library for realtime communication between devices, algo
 ![image](https://user-images.githubusercontent.com/2764891/99635233-854c5d00-29f6-11eb-9668-57845adb0265.png)
 
 ## Usage
-The SDK can be integrated into any device, on any platform, in any language. Currently, there are wrappers around the library in Python, C# and NodeJS.
+The SDK can be integrated into any device, on any platform, in any language. Currently, there are wrappers around the library in C++, Python, C# and NodeJS.
 
-### Python Example
+### C++ Example
 A simple example demonstrating how to initialize the SDK, send and received data.
-```python
-# Imports the telerobotics SDK
-from telerobotics import Sdk
+```cpp
+#include "sdk.h"
+#include "common.pb.h"
 
-# Imports the telerobotics protobufs used later in the file
-# These types are defined in protos/common.proto
-from telerobotics_protos.common_pb2 import DataType, Frame, CatheterData, CatheterCoordinates, CatheterSensorCoordinates, Coordinates, Quaternion
+using namespace std;
+using namespace github::com::pyrus::platform::protos;
 
-# This callback is fired when
-# a telerobotic simulation/procedure begins
-def on_session_joined(session_id):
-    print("Joined session", session_id)
+void onSessionJoined(uint64_t sessionId);
+void onSessionEnded(uint64_t sessionId);
+bool getFrame(Frame& frame);
+bool onFrame(Frame&);
 
-# This callback is fired when
-# a telerobotic simulation/procedure ends
-def on_session_ended(session_id):
-    print("Ssession", session_id, "ended")
+int main() {
+    // Initialize the SDK
+    Sdk sdk = Sdk("apis.healthcaretelerobotics.com:30000",
+        "apis.healthcaretelerobotics.com:30000",
+        "apis.healthcaretelerobotics.com:30005",
+        8,                                                  // The unique device id
+        3000,                                               // The port for communication
+        { DataType::CatheterSensorCoordinates },            // The type this device produces
+        { DataType::RobotControls },                        // The type this device consumes
+        onSessionJoined,                                    // Session joined callback
+        onSessionEnded,                                     // Session ended callback
+        getFrame,                                           // Get data callback
+        onFrame                                             // On data callback
+    );
 
-# This callback is fired every frame.
-# This is how you send data to remote devices.
-# This example callback sends dummy catheter data.
-# Other data types can be found in protos/common.proto
-def get_frame_callback():
-    frame = Frame()
-    frame.catheterData.append(
-        CatheterData(
-            sensorId=0,
-            coordinates= CatheterCoordinates(
-                position=Coordinates(
-                    x=0,
-                    y=1,
-                    z=2,
-                ),
-                rotation=Quaternion(
-                    x=0,
-                    y=1,
-                    z=2,
-                    w=1,
-                ),
-            ),
-        )
-    )
+    sdk.connect();
+}
+
+// Session joined callback
+void onSessionJoined(uint64_t sessionId) {
+    cout << "Joined session " << sessionId << endl;
     
-    return frame
+}
 
-# This callback is fired when the telerobotic
-# simulation/procedure receives data. Data is
-# encapsulted in the Frame message type defined
-# in protos/common.proto
-def on_frame_callback(frame):
-    print(frame.electricalSignals)
-    return True
+// Session ended callback
+void onSessionEnded(uint64_t sessionId) {
+    cout << "Session " << sessionId << " ended" << endl;
+}
 
-# Defines the type of data this program produces and consumes
-produces = (DataType.CatheterSensorCoordinates)
-consumes = (DataType.ElectricalSignals)
+// Called every frame
+// This is where you send data
+bool getFrame(Frame& frame) {
+    CatheterData* catheterData = frame.add_catheterdata();
+    catheterData->set_sensorid(1);
+    CatheterCoordinates* coordinates = new CatheterCoordinates();
+    catheterData->set_allocated_coordinates(coordinates);
+    
+    Coordinates* position = new Coordinates();
+    coordinates->set_allocated_position(position);
+    position->set_x(0.01);
+    position->set_y(0.02);
+    position->set_z(0.03);
 
-# Initialize the SDK
-sdk = Sdk(
-    on_session_joined=on_session_joined,                                    # Called when a simulation/procedure begins
-    on_session_ended=on_session_ended,                                      # Called when a simulation/procedure ends
-    get_frame_callback=get_frame_callback,                                  # Called to get data every frame (see get_frame_freq below)
-    on_frame_callback=on_frame_callback,                                    # Called when data is received
-    produces=produces,                                                      # Defines the types of data this program produces, if any
-    consumes=consumes,                                                      # Defines the types od data this program consumes, if any
-    device_service_address="https://apis.telerobotics.com/devices",         # URL to the device service
-    session_service_address="https://apis.telerobotics.com/sessions",       # URL to the session service
-    state_manager_service_address="https://apis.telerobotics.com/states",   # URL to the state manager service
-    device_id=1,                                                            # The unique id of this device/program
-    device_port=3000,                                                       # The port this program will use to communicate with other devices
-    get_frame_freq=30,                                                      # The frequency in milliseconds data is retrieved from this device
-)
+    Quaternion* rotation = new Quaternion();
+    coordinates->set_allocated_rotation(rotation);
+    rotation->set_x(0.01);
+    rotation->set_y(0.02);
+    rotation->set_z(0.03);
+    rotation->set_w(1);
 
-# Asynchronously connect to the telerobotic platform.
-# When a session starts, the callbacks will start firing.
-sdk.connect_async()
+    // cout << "Frame: " << frame.DebugString() << endl;
+
+    return true;
+}
+
+// Called when data is received
+bool onFrame(Frame& frame) {
+    // cout << "Frame: " << frame.DebugString() << endl;
+    return true;
+}
 ```
 
 ## Installation
