@@ -252,6 +252,11 @@ namespace Telerotobics.SDK
                 OnCatheterDataEvent?.Invoke(frame.CatheterData.ToArray());
             }
 
+            if (frame.ElectricalSignals != null)
+            {
+                OnElectricalSignalsEvent?.Invoke(frame.ElectricalSignals.ToArray());
+            }
+
             return true;
         }
 
