@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
+    <PackageReference Include="Grpc" Version="1.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\csharpsdk\Telerobotics.SDK.csproj" />
+    <ProjectReference Include="..\protos\Telerobotics.Protos.csproj" />
+  </ItemGroup>
+
+  <Target Name="CopyLibsdkWindows" AfterTargets="AfterBuild" Condition=" '$(OS)' == 'Windows_NT' ">
+    <Copy SourceFiles="$(ProjectDir)../../libsdk.dll" DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="CopyLibsdkOther" AfterTargets="AfterBuild" Condition=" '$(OS)' != 'Windows_NT' ">
+    <Copy SourceFiles="$(ProjectDir)../../libsdk.so" DestinationFolder="$(OutDir)" />
+  </Target>
+
+</Project>
